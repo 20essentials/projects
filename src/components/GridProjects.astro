@@ -1,0 +1,126 @@
+---
+interface Props {
+  start: number;
+  end: number;
+  hideNextArrow?: boolean;
+  hidePrevArrow?: boolean;
+}
+
+const {
+  start = 1,
+  end = 100,
+  hideNextArrow = false,
+  hidePrevArrow = false
+} = Astro.props;
+import { baseUrl, generateData } from '@/utils/functions';
+const projects = generateData({ start, end });
+import Layout from '@/layouts/Layout.astro';
+const title = `${start} - ${end}`;
+const imageArrow = baseUrl('/assets/right.svg');
+const pageSize = end - start + 1; // el tamaño del rango
+const prevStart = Math.max(1, start - pageSize); // no ir por debajo de 1
+const prevEnd = start - 1; // el anterior final
+const nextStart = end + 1;
+const nextEnd = end + pageSize;
+
+const pathPrevUrl = `${prevStart}-${prevEnd}/`;
+const nextPathUrl = `${nextStart}-${nextEnd}/`;
+
+const prevPageUrl = baseUrl(pathPrevUrl);
+const nextPageUrl = baseUrl(nextPathUrl);
+---
+
+<Layout title={title}>
+  {
+    projects.map(a => (
+      <a
+        href={a.href}
+        class={`item item-${a.item}`}
+        style={a.style}
+        tabindex={a.item}
+      />
+    ))
+  }
+
+  {
+    !hidePrevArrow && (
+      <a type='button' class='button prev' href={prevPageUrl}>
+        <div class='button-top'>
+          <img src={imageArrow} alt='left arrow' />
+        </div>
+        <div class='button-bottom' />
+        <div class='button-base' />
+      </a>
+    )
+  }
+
+  {
+    !hideNextArrow && (
+      <a type='button' class='button next' href={nextPageUrl}>
+        <div class='button-top'>
+          <img src={imageArrow} alt='right arrow' />
+        </div>
+        <div class='button-bottom' />
+        <div class='button-base' />
+      </a>
+    )
+  }
+</Layout>
+
+<script>
+  const d = document;
+  const $ = (el: string): HTMLAnchorElement | null => d.querySelector(el);
+
+  /*********************ITEM ACTIVE ANIMATION**********************/
+  let lastElement: HTMLElement | null = null;
+
+  const start = (e: TouchEvent) => {
+    const move = (e: TouchEvent) => {
+      const touch = e.touches[0];
+      if (!touch) return;
+
+      const element = d.elementFromPoint(
+        touch.clientX,
+        touch.clientY
+      ) as HTMLElement | null;
+
+      if (!element) return;
+
+      if (element.classList.contains('item')) {
+        if (lastElement && lastElement !== element) {
+          lastElement.classList.remove('active');
+        }
+
+        element.classList.add('active');
+        lastElement = element;
+      }
+    };
+
+    const end = () => {
+      d.removeEventListener('touchmove', move);
+      d.removeEventListener('touchend', end);
+    };
+
+    d.addEventListener('touchmove', move, { passive: true });
+    d.addEventListener('touchend', end, { passive: true });
+  };
+
+  d.addEventListener('touchstart', start, { passive: true });
+
+  /*********************KEYDOWN NAVIGATION**********************/
+  d.addEventListener('keydown', (e: KeyboardEvent) => {
+    if (e.key === 'ArrowRight') {
+      const next = $('.next') as HTMLAnchorElement | null;
+      if (next?.href) {
+        location.href = next.href;
+      }
+    }
+
+    if (e.key === 'ArrowLeft') {
+      const prev = $('.prev') as HTMLAnchorElement | null;
+      if (prev?.href) {
+        location.href = prev.href;
+      }
+    }
+  });
+</script>

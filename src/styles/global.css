@@ -1,0 +1,206 @@
+*,
+*::after,
+*::before {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+    'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue';
+  -webkit-tap-highlight-color: transparent;
+}
+
+html {
+  scroll-behavior: smooth;
+  scrollbar-width: thin;
+  scrollbar-color: #fff8 black;
+}
+
+body {
+  height: 100dvh;
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  place-content: start;
+  background-color: #000;
+}
+
+.item {
+  flex-grow: 1;
+  flex-basis: 10%;
+  height: 10vh;
+  aspect-ratio: 16 / 9;
+  background-image: var(--bg-img);
+  background-size: cover;
+  background-position: center;
+  transition: box-shadow 0s ease;
+  box-shadow: inset 0 0 50px 0 transparent;
+
+  @media (hover: hover) {
+    &:hover {
+      box-shadow: inset 0 0 222px 0 #fff4;
+    }
+  }
+  @media not (hover: hover) {
+    &.active {
+      box-shadow: inset 0 0 222px 0 #fff4;
+    }
+  }
+
+  &:focus {
+    outline: none;
+    box-shadow: inset 0 0 222px 0 #fff4;
+  }
+}
+
+/***************************VIEW TRANSITIONS***************************/
+
+body {
+  view-transition-name: circle;
+}
+
+@view-transition {
+  navigation: auto;
+}
+
+::view-transition-old(circle) {
+  animation: circleAtCenter 0.5s ease reverse forwards;
+}
+
+::view-transition-new(circle) {
+  animation: circleAtCenter 0.5s ease forwards;
+}
+
+@keyframes circleAtCenter {
+  0% {
+    clip-path: circle(0% at 50% 50%);
+  }
+  100% {
+    clip-path: circle(100% at 50% 50%);
+  }
+}
+
+/*
+BUTTON
+*/
+
+.button {
+  appearance: none;
+  position: relative;
+  border-width: 0;
+  padding: 0 0.52vmax 0.78vmax;
+  background: transparent;
+  cursor: pointer;
+  position: fixed;
+  z-index: 50;
+  width: 4.6vmax;
+
+  img {
+    width: 100%;
+    height: 100%;
+  }
+
+  &.next {
+    right: 0.33vmax;
+
+    bottom: 0.33vmax;
+  }
+
+  &.prev {
+    left: 0.33vmax;
+    bottom: 0.33vmax;
+
+    img {
+      transform: scaleX(-1);
+    }
+  }
+}
+
+.button-top {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  z-index: 0;
+  transform: translateY(0);
+  text-align: center;
+  color: #fff;
+  padding: 0.52vmax 1.04vmax;
+  text-shadow: 0 -0.07vmax rgba(0, 0, 0, 0.25);
+  transition-property: transform;
+  transition-duration: 0.2s;
+  user-select: none;
+  
+}
+
+.button:active .button-top {
+  transform: translateY(0.39vmax);
+}
+
+.button-top::after {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  width: 100%;
+  height: 100%;
+  box-sizing: content-box;
+  background-image: radial-gradient(#3dcd9e, #369d8d);
+  text-align: center;
+  color: #fff;
+  border-radius: 0.26vmax;
+  box-shadow: inset 0 0 0px 0.07vmax rgba(255, 255, 255, 0.2),
+    0 0.07vmax 0.13vmax 0.07vmax rgba(255, 255, 255, 0.2);
+  transition-property: border-radius, padding, width, transform;
+  transition-duration: 0.2s;
+}
+
+.button:active .button-top::after {
+  border-radius: 0.39vmax;
+  padding: 0 0.13vmax;
+}
+
+.button-bottom {
+  position: absolute;
+  z-index: -1;
+  bottom: 0.26vmax;
+  left: 0.26vmax;
+  border-radius: 0.52vmax / 1.04vmax 1.04vmax 0.52vmax 0.52vmax;
+  padding-top: 0.39vmax;
+  width: calc(100% - 0.52vmax);
+  height: calc(100% - 0.65vmax);
+  box-sizing: content-box;
+  background-color: #38a19d;
+  background-image: radial-gradient(
+      0.26vmax 0.52vmax at 0.26vmax calc(100% - 0.52vmax),
+      rgba(255, 255, 255, 0.25),
+      transparent
+    ),
+    radial-gradient(
+      0.26vmax 0.52vmax at calc(100% - 0.26vmax) calc(100% - 0.52vmax),
+      rgba(255, 255, 255, 0.25),
+      transparent
+    ),
+    radial-gradient(1.04vmax at -0.26vmax 0, white, transparent),
+    radial-gradient(1.04vmax at calc(100% + 0.26vmax) 0, white, transparent);
+  box-shadow: 0 0.13vmax 0.2vmax 0 rgba(0, 0, 0, 0.5),
+    inset 0 -0.07vmax 0.2vmax 0.2vmax rgba(0, 0, 0, 0.4);
+  transition-property: border-radius, padding-top;
+  transition-duration: 0.2s;
+}
+
+.button:active .button-bottom {
+  border-radius: 0.65vmax 0.65vmax 0.52vmax 0.52vmax / 0.52vmax;
+  padding-top: 0;
+}
+
+.button-base {
+  position: absolute;
+  z-index: -2;
+  left: 0;
+  width: 100%;
+  border-radius: 0.78vmax;
+  top: 0.26vmax;
+  height: calc(100% - 0.26vmax);
+  box-shadow: 0 0.07vmax 0.07vmax 0 black,
+    inset 0 0.13vmax 0.13vmax rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0.15);
+}

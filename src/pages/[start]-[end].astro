@@ -1,0 +1,28 @@
+---
+import GridProjects from '@/components/GridProjects.astro';
+import { generateStaticPaths } from '@/utils/functions';
+
+const initStart = 1;
+const endProject = 1200;
+
+export async function getStaticPaths() {
+  return generateStaticPaths({
+    initStart: 1,
+    endProject: 1200,
+    blockSize: 100
+  });
+}
+
+const { start, end } = Astro.params;
+const numStart = Number(start);
+const numEnd = Number(end);
+const hidePrevArrow = numStart === initStart;
+const hideNextArrow = numEnd === endProject;
+---
+
+<GridProjects
+  start={numStart}
+  end={numEnd}
+  hidePrevArrow={hidePrevArrow}
+  hideNextArrow={hideNextArrow}
+/>
