@@ -9,5 +9,5 @@ export default defineConfig({
   base: import.meta.env.DEV ? undefined : '/projects/',
   site: import.meta.env.DEV
     ? 'http://localhost:4321/'
-    : 'https://github.com/20essentials/projects/'
+    : 'https://20essentials.github.io/projects/'
 });
