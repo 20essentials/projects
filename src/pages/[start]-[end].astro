@@ -3,12 +3,12 @@ import GridProjects from '@/components/GridProjects.astro';
 import { generateStaticPaths } from '@/utils/functions';
 
 const initStart = 1;
-const endProject = 1300;
+const endProject = 1400;
 
 export async function getStaticPaths() {
   return generateStaticPaths({
     initStart: 1,
-    endProject: 1300,
+    endProject: 1400,
     blockSize: 100
   });
 }
